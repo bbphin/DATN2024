@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('code')->comment('mã giảm giá của sản phẩm');
             $table->string('discoutn_type')->comment('loại mã giảm giá');
-            $table->dateTime('start_date')->comment('ngày bắt đầu sử dụng')->nullable();
-            $table->dateTime('end_date')->comment('ngày kết thúc')->nullable();
+            $table->string('start_date')->comment('ngày bắt đầu sử dụng')->nullable();
+            $table->string('end_date')->comment('ngày kết thúc')->nullable();
             $table->string('min_spend')->comment('số tiền tối thiểu đơn hàng có thể sử dụng mã -> ví dụ: 100k');
             $table->string('max_discount_amount')->comment('số tiền giảm tối đa');
             $table->integer('total_usage_count')->comment('số lượng có thể sử dụng');
