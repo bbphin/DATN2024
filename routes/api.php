@@ -17,5 +17,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-
+// Size
 require_once __DIR__ . '/size.php';
+// Brand
+require_once __DIR__ . '/brand.php';
