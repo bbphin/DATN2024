@@ -23,3 +23,5 @@ require_once __DIR__ . '/size.php';
 require_once __DIR__ . '/brand.php';
 // Color
 require_once __DIR__ . '/color.php';
+// Category
+require_once __DIR__ . '/category.php';
