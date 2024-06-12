@@ -24,9 +24,20 @@ class SizeRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|unique:sizes,name'
-        ];
+        $method = $this->route()->getActionMethod();
+        $rule = [];
+        if ($method === 'POST') {
+            $rule = [
+                'name' => 'required|unique:sizes'
+            ];
+        }
+
+        if ($method === 'PUT') {
+            $rule = [
+                'name' => 'required|unique:sizes,name,' . $this->id
+            ];
+        }
+        return $rule;
     }
 
     public function messages()
@@ -46,7 +57,7 @@ class SizeRequest extends FormRequest
 
     protected function failedValidation(Validator $validator)
     {
-        $response = ApiResponse(false,Response::HTTP_BAD_REQUEST,$validator->errors(),null);
-        throw (new ValidationException($validator,$response));
+        $response = ApiResponse(false, Response::HTTP_BAD_REQUEST, $validator->errors(), null);
+        throw (new ValidationException($validator, $response));
     }
 }
