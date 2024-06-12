@@ -25,3 +25,5 @@ require_once __DIR__ . '/brand.php';
 require_once __DIR__ . '/color.php';
 // Category
 require_once __DIR__ . '/category.php';
+// Product Category
+require_once __DIR__ . '/product_category.php';
