@@ -24,20 +24,19 @@ class SizeRequest extends FormRequest
      */
     public function rules(): array
     {
-        $method = $this->route()->getActionMethod();
-        $rule = [];
-        if ($method === 'POST') {
-            $rule = [
+        if ($this->isMethod('POST')) {
+            return [
                 'name' => 'required|unique:sizes'
             ];
         }
 
-        if ($method === 'PUT') {
-            $rule = [
-                'name' => 'required|unique:sizes,name,' . $this->id
+        if ($this->isMethod('PUT')) {
+            $id = $this->route('size');
+            return [
+                'name' => 'required|unique:sizes,name,' . $id
             ];
         }
-        return $rule;
+        return [];
     }
 
     public function messages()
