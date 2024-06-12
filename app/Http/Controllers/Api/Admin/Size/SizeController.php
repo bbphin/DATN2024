@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Api\Size;
+namespace App\Http\Controllers\Api\Admin\Size;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\SizeResource;
+use App\Models\Size;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SizeController extends Controller
 {
@@ -12,7 +15,8 @@ class SizeController extends Controller
      */
     public function index()
     {
-        //
+        $data = Size::all();
+        return ApiResponse(true, Response::HTTP_OK, messageResponseData(), SizeResource::collection($data));
     }
 
     /**
