@@ -21,3 +21,5 @@ use Illuminate\Support\Facades\Route;
 require_once __DIR__ . '/size.php';
 // Brand
 require_once __DIR__ . '/brand.php';
+// Color
+require_once __DIR__ . '/color.php';
