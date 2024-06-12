@@ -25,10 +25,24 @@ class SizeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => 'required|unique:sizes,name'
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'required' => ':attribute không được để trống',
+            'unique' => ':attribute đã tồn tại',
+        ];
+    }
+
+    public function attributes()
+    {
+        return [
+            'name' => 'Kích thước'
+        ];
+    }
 
     protected function failedValidation(Validator $validator)
     {
