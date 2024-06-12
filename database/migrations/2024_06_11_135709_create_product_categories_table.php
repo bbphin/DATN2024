@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('product_categories', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('category_id')->comment('id của danh mục');
             $table->string('name')->comment('ten cua danh muc sản phẩm');
             $table->string('slug')->nullable();
             $table->text('description')->nullable()->comment('mo ta cua danh muc sản phẩm');
