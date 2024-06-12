@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('wishlists', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('product_id')->comment('id của sản phẩm');
+            $table->tinyInteger('user_id')->comment('id của người dùng');
             $table->timestamps();
         });
     }
