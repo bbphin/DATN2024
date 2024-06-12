@@ -70,7 +70,7 @@ class BrandController extends Controller
             if (empty($brand)) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseNotFound(), null);
             }
-            if ($brand->product()->exists()) {
+            if ($brand->Product()->exists()) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
             }
             $brand->delete();

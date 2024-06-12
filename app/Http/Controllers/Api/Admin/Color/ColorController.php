@@ -83,7 +83,7 @@ class ColorController extends Controller
             if(empty($color)) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
             }
-            if($color->product()->exists()) {
+            if($color->Product()->exists()) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseActionFailed(),null);
             }
             $color->delete();
