@@ -14,7 +14,7 @@ class Product extends Model
         'brand_id',
         'color_id',
         'size_id',
-        'category_id',
+        'product_category_id',
         'name',
         'slug',
         'image',
@@ -22,7 +22,7 @@ class Product extends Model
         'sort_description',
         'description',
         'price',
-        'quatity',
+        'quantity',
         'view',
         'is_published',
     ];

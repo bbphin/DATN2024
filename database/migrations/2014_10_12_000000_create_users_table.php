@@ -17,10 +17,12 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone')->nullable()->comment('so dien thoai');
             $table->string('address')->nullable()->comment('dia chi');
             $table->string('avatar')->nullable()->comment('anh dai dien');
             $table->decimal('balance')->default('0')->comment('so tien trong vi');
             $table->tinyInteger('is_banned')->default('1')->comment('trang thai tai khoan -> 1> active, 2> unactive');
+            $table->tinyInteger('role')->default('1')->comment('quyen han cua nguoi dung -> 1> ad, 2> customer');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

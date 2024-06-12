@@ -24,6 +24,8 @@ class User extends Authenticatable
         'address',
         'avatar',
         'balance',
+        'phone',
+        'role',
         'is_banned',
     ];
 

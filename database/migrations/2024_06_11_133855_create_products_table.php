@@ -16,7 +16,7 @@ return new class extends Migration
             $table->tinyInteger('brand_id')->comment('id thuong hieu cua san pham');
             $table->tinyInteger('color_id')->comment('id mau cua san pham');
             $table->tinyInteger('size_id')->comment('id kich thuoc cua san pham');
-            $table->tinyInteger('category_id')->comment('id danh muc cua san pham');
+            $table->tinyInteger('product_category_id')->comment('id danh muc cua san pham');
             $table->string('name')->comment('ten cua san pham');
             $table->string('slug')->nullable();
             $table->string('image')->nullable()->comment('anh cua san pham');
