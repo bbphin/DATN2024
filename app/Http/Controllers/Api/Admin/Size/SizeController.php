@@ -66,6 +66,9 @@ class SizeController extends Controller
             if (empty($size)) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseNotFound(), null);
             }
+            if ($size->product()->exists()) {
+                return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
+            }
             $size->delete();
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), new SizeResource($size));
         } catch (\Exception $e) {
