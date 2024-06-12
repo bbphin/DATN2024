@@ -48,6 +48,7 @@ class ProductCategoryController extends Controller
             $data = $request->all();
             $data['slug'] = Str::slug($request?->name);
             $productCategory = ProductCategory::create($data);
+            !empty($productCategory?->category_id) && $productCategory->category_id = $productCategory->Category?->name;
             return ApiResponse(true,Response::HTTP_CREATED,messageResponseActionSuccess(),new ProductCategoryResource($productCategory));
         }catch (\Exception $e) {
             return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
@@ -83,6 +84,7 @@ class ProductCategoryController extends Controller
             $data = $request->all();
             $data['slug'] = Str::slug($request?->name);
             $productCategory->update($data);
+            !empty($productCategory?->category_id) && $productCategory->category_id = $productCategory->Category?->name;
             return ApiResponse(true,Response::HTTP_OK,messageResponseActionSuccess(),new ProductCategoryResource($productCategory));
         }catch (\Exception $e) {
             return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
