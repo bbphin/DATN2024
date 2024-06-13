@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Api\Color;
+namespace App\Http\Controllers\Api\Admin\Color;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ColorRequest;
+use App\Http\Resources\ColorResource;
+use App\Models\Color;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ColorController extends Controller
 {
@@ -26,9 +30,14 @@ class ColorController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ColorRequest $request)
     {
-        //
+        try {
+            $color = Color::create($request->all());
+            return ApiResponse(true,Response::HTTP_CREATED,messageResponseActionSuccess(),new ColorResource($color));
+        }catch (\Exception $e){
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 
     /**
@@ -50,9 +59,18 @@ class ColorController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ColorRequest $request, string $id)
     {
-        //
+        try {
+            $color = Color::find($id);
+            if(empty($color)) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
+            }
+            $color->update($request->all());
+            return ApiResponse(true,Response::HTTP_OK,messageResponseActionSuccess(),new ColorResource($color));
+        }catch (\Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 
     /**
@@ -60,6 +78,18 @@ class ColorController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $color = Color::find($id);
+            if(empty($color)) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
+            }
+            if($color->Product()->exists()) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseActionFailed(),null);
+            }
+            $color->delete();
+            return ApiResponse(true,Response::HTTP_OK,messageResponseActionSuccess(),new ColorResource($color));
+        }catch (\Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 }
