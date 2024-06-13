@@ -21,4 +21,9 @@ class Coupon extends Model
         'total_usage_count',
         'user_usage_count',
     ];
+
+    public function UserCoupon()
+    {
+        return $this->hasMany(UserCoupon::class,'coupon_id','id');
+    }
 }
