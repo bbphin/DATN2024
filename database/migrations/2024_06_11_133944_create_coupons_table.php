@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
             $table->string('code')->comment('mã giảm giá của sản phẩm');
-            $table->string('discoutn_type')->comment('loại mã giảm giá');
+            $table->string('discount_type')->comment('loại mã giảm giá')->nullable();
             $table->string('start_date')->comment('ngày bắt đầu sử dụng')->nullable();
             $table->string('end_date')->comment('ngày kết thúc')->nullable();
             $table->string('min_spend')->comment('số tiền tối thiểu đơn hàng có thể sử dụng mã -> ví dụ: 100k');
