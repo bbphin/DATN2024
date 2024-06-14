@@ -119,7 +119,7 @@ class ProductController extends Controller
             $product->update([
                 'view' => $product->view + 1,
             ]);
-            
+
             !empty($product->brand_id) && $product->brand_id = $product->Brand?->name;
             !empty($product->color_id) && $product->color_id = $product->Color?->name;
             !empty($product->size_id) && $product->size_id = $product->Size?->name;
