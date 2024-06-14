@@ -19,7 +19,7 @@ class SizeController extends Controller
     public function index()
     {
         try {
-            $data = Size::paginate(5);
+            $data = Size::all();
             return ApiResponse(true, Response::HTTP_OK, messageResponseData(), SizeResource::collection($data));
         } catch (\Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
