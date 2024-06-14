@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Api\Client\Wishlist;
+namespace App\Http\Controllers\Api\Client\WishList;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -12,7 +12,7 @@ class WishListController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**
