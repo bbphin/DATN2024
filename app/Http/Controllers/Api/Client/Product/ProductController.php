@@ -10,8 +10,9 @@ use Illuminate\Http\Response;
 
 class ProductController extends Controller
 {
+
     // hien thi danh sach san pham theo product category
-    public function showProductsByproductCategory(string $id)
+    public function showProductsByProductCategory(string $id)
     {
         try {
             $productByProductCategory = ProductCategory::query()->leftJoin('products',function ($join) {
@@ -22,4 +23,5 @@ class ProductController extends Controller
             return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
         }
     }
+
 }
