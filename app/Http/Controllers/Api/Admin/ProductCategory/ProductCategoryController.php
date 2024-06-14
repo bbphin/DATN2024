@@ -99,6 +99,9 @@ class ProductCategoryController extends Controller
             if(empty($productCategory)) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
             }
+            if($productCategory->Product()->exists()) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseActionFailed(),null);
+            }
             $productCategory->delete();
             return ApiResponse(true,Response::HTTP_OK,messageResponseActionSuccess(),new ProductCategoryResource($productCategory));
         }catch (\Exception $e) {
