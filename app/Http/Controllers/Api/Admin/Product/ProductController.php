@@ -10,9 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-use Illuminate\Support\Facades\Storage;
-use Mockery\Exception;
-
+use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
     /**
@@ -66,32 +64,34 @@ class ProductController extends Controller
             $data['slug'] = Str::slug($request?->name);
             $images = $request?->image;
             $thumbnail_images = $request?->thumbnail_image;
-            if (is_array($images) && is_array($thumbnail_images)) {
-                foreach ($images as $image) {
-                    $data['image'] = Cloudinary::upload($image->getRealPath(), array(
+            if($request->hasFile('image') || $request->hasFile('thumbnail_image')) {
+                if (is_array($images) && is_array($thumbnail_images)) {
+                    foreach ($images as $image) {
+                        $data['image'] = Cloudinary::upload($image->getRealPath(), array(
+                            'folder' => "DATN2024/Product",
+                            'overwrite' => false,
+                            'resource_type' => "image"
+                        ))->getSecurePath();
+                    }
+                    foreach ($thumbnail_images as $thumbnail_image) {
+                        $data['thumbnail_image'] = Cloudinary::upload($thumbnail_image->getRealPath(), array(
+                            'folder' => "DATN2024/Product",
+                            'overwrite' => false,
+                            'resource_type' => "image"
+                        ))->getSecurePath();
+                    }
+                } else {
+                    $data['image'] = Cloudinary::upload($images->getRealPath(), array(
+                        'folder' => "DATN2024/Product",
+                        'overwrite' => false,
+                        'resource_type' => "image"
+                    ))->getSecurePath();
+                    $data['thumbnail_image'] = Cloudinary::upload($thumbnail_images->getRealPath(), array(
                         'folder' => "DATN2024/Product",
                         'overwrite' => false,
                         'resource_type' => "image"
                     ))->getSecurePath();
                 }
-                foreach ($thumbnail_images as $thumbnail_image) {
-                    $data['thumbnail_image'] = Cloudinary::upload($thumbnail_image->getRealPath(), array(
-                        'folder' => "DATN2024/Product",
-                        'overwrite' => false,
-                        'resource_type' => "image"
-                    ))->getSecurePath();
-                }
-            } else {
-                $data['image'] = Cloudinary::upload($images->getRealPath(), array(
-                    'folder' => "DATN2024/Product",
-                    'overwrite' => false,
-                    'resource_type' => "image"
-                ))->getSecurePath();
-                $data['thumbnail_image'] = Cloudinary::upload($thumbnail_images->getRealPath(), array(
-                    'folder' => "DATN2024/Product",
-                    'overwrite' => false,
-                    'resource_type' => "image"
-                ))->getSecurePath();
             }
             $product = Product::create($data);
 
@@ -151,7 +151,7 @@ class ProductController extends Controller
             $images = $request?->image;
             $thumbnail_images = $request?->thumbnail_image;
 
-            if($request->has('image') || $request->has('thumbnail_image')) {
+            if($request->hasFile('image') || $request->hasFile('thumbnail_image')) {
                 if (is_array($images) && is_array($thumbnail_images)) {
                     foreach ($images as $image) {
                         $data['image'] = Cloudinary::upload($image->getRealPath(), array(
@@ -200,8 +200,7 @@ class ProductController extends Controller
     public function destroy(string $id)
     {
         try {
-            $product = Product::find($id);
-
+            $product = Product::withTrashed()->find($id);
             if (empty($product)) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseNotFound(), null);
             }
@@ -289,6 +288,29 @@ class ProductController extends Controller
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), new ProductResource($product));
         }catch (\Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $validate = Validator::make($request->all(),[
+                'keyword' => 'required'
+            ],[
+                'keyword.required' => 'Vui lòng nhập thông tin để tìm kiếm'
+            ]);
+            if($validate->fails()) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,$validate->errors(),null);
+            }
+            $keyword = $request?->keyword;
+            $data = Product::query()->where('name','LIKE',"{$keyword}%")->get();
+
+            if($data->count() < 0) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
+            }
+            return ApiResponse(true, Response::HTTP_OK,messageResponseData(),ProductResource::collection($data));
+        }catch (\Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
 }
