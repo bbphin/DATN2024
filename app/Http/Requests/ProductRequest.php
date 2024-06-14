@@ -35,7 +35,7 @@ class ProductRequest extends FormRequest
                 'slug' => 'unique:products',
                 'price' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric|min:0',
-                'image' => 'image'
+//                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             ];
 
         }
@@ -51,7 +51,7 @@ class ProductRequest extends FormRequest
                 'slug' => 'unique:products,slug,' . $id,
                 'price' => 'required|numeric|min:0',
                 'quantity' => 'required|numeric|min:0',
-                'image' => 'image'
+//                'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
             ];
         }
         return [];

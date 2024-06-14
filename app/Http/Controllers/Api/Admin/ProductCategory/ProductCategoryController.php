@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Api\Admin\ProductCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductCategoryRequest;
 use App\Http\Resources\ProductCategoryResource;
-use App\Models\Category;
 use App\Models\ProductCategory;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 
@@ -100,6 +98,9 @@ class ProductCategoryController extends Controller
             $productCategory = ProductCategory::find($id);
             if(empty($productCategory)) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
+            }
+            if($productCategory->Product()->exists()) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseActionFailed(),null);
             }
             $productCategory->delete();
             return ApiResponse(true,Response::HTTP_OK,messageResponseActionSuccess(),new ProductCategoryResource($productCategory));

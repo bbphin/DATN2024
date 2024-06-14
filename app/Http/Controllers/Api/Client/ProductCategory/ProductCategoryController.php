@@ -3,63 +3,24 @@
 namespace App\Http\Controllers\Api\Client\ProductCategory;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProductCategoryResource;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ProductCategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    // lấy danh mục sản phẩm từ danh mục cha
+    // ví dụ: quần -> quần nam
+    public function productCategory(string $id)
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        try {
+            $productCategory = Category::query()->leftJoin('product_categories',function($join) {
+                $join->on('product_categories.category_id', '=', 'categories.id');
+            })->where('category_id',$id)->limit(6)->get();
+            return ApiResponse(true,Response::HTTP_OK,messageResponseData(),ProductCategoryResource::collection($productCategory));
+        }catch (\Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 }
