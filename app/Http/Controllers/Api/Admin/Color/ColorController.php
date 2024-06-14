@@ -16,7 +16,12 @@ class ColorController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $data = Color::all();
+            return ApiResponse(true,Response::HTTP_OK,messageResponseData(),ColorResource::collection($data));
+        }catch (\Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 
     /**
