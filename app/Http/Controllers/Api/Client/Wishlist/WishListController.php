@@ -3,7 +3,14 @@
 namespace App\Http\Controllers\Api\Client\WishList;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\WishlistResource;
+use App\Models\Product;
+use App\Models\Wishlist;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Mockery\Exception;
+use function Laravel\Prompts\select;
 
 class WishListController extends Controller
 {
@@ -12,7 +19,29 @@ class WishListController extends Controller
      */
     public function index()
     {
+        try {
+            $user = Auth::guard('api')->user();
+            
+            $data = Wishlist::query()->leftJoin('users',function($join){
+                $join->on('users.id','=','wishlists.user_id');
+            })->leftJoin('products',function($join){
+                $join->on('products.id','=','wishlists.product_id');
+            })->where('user_id',$user?->id)->get();
 
+//            $data = Wishlist::query()->leftJoin('users',function($join){
+//                $join->on('users.id','=','wishlists.user_id');
+//            })->leftJoin('products',function($join){
+//                $join->on('products.id','=','wishlists.product_id');
+//            })->get();
+
+            $data->collect()->each(function($item){
+                $item->user_id = $item->User?->name;
+                $item->product_id = $item->Product?->name;
+            });
+            return ApiResponse(true,Response::HTTP_OK,messageResponseData(),WishlistResource::collection($data));
+        }catch (Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 
     /**
@@ -28,7 +57,16 @@ class WishListController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        try {
+
+            $wishlist = Wishlist::create([
+                'product_id' => $request?->product_id,
+                'user_id' => $request?->user_id,
+            ]);
+            return ApiResponse(true, Response::HTTP_CREATED,messageResponseActionSuccess(),new WishlistResource($wishlist));
+        }catch (\Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 
     /**
