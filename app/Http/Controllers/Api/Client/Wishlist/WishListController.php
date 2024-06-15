@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\Client\WishList;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WishlistResource;
 use App\Models\Product;
+use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -21,19 +22,17 @@ class WishListController extends Controller
     {
         try {
             $user = Auth::guard('api')->user();
-            
+
             $data = Wishlist::query()->leftJoin('users',function($join){
                 $join->on('users.id','=','wishlists.user_id');
             })->leftJoin('products',function($join){
                 $join->on('products.id','=','wishlists.product_id');
-            })->where('user_id',$user?->id)->get();
-
-//            $data = Wishlist::query()->leftJoin('users',function($join){
-//                $join->on('users.id','=','wishlists.user_id');
-//            })->leftJoin('products',function($join){
-//                $join->on('products.id','=','wishlists.product_id');
-//            })->get();
-
+            })->where('user_id',$user?->id)->select(
+                'wishlists.*','products.id as productId','products.id as productId',
+                'products.name as productName','products.price as productPrice','products.image as productImage',
+                'products.color_id as productColor','products.size_id as productSize','products.brand_id as productBrand',
+                'products.product_category_id as productCategory','users.id as userId','users.name as userName'
+            )->get();
             $data->collect()->each(function($item){
                 $item->user_id = $item->User?->name;
                 $item->product_id = $item->Product?->name;
@@ -58,10 +57,9 @@ class WishListController extends Controller
     public function store(Request $request)
     {
         try {
-
-            $wishlist = Wishlist::create([
-                'product_id' => $request?->product_id,
-                'user_id' => $request?->user_id,
+            $wishlist = Wishlist::firstOrCreate ([
+                'product_id' => $request->product_id,
+                'user_id' => $request->user_id,
             ]);
             return ApiResponse(true, Response::HTTP_CREATED,messageResponseActionSuccess(),new WishlistResource($wishlist));
         }catch (\Exception $e) {
@@ -98,6 +96,11 @@ class WishListController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $wishlist = Wishlist::destroy($id);
+            return ApiResponse(true,Response::HTTP_OK,messageResponseActionSuccess(),new WishlistResource($wishlist));
+        }catch (\Exception $e) {
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
     }
 }
