@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Laravel\Sanctum\PersonalAccessToken;
+use App\Notifications\ResetPasswordNotification;
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -20,32 +22,36 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
-        'address',
-        'avatar',
-        'balance',
         'phone',
         'role',
-        'is_banned',
+        'password',
+        'token_google',
+        'avatar',
+        'balance',
+        'is_banned'
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    public function withAccessTokenAbilities()
+    {
+        return [
+            'user' => 'User',
+            'admin' => 'Admin',
+            'staff' => 'Staff',
+        ];
+    }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPasswordNotification($token));
+    }
+
+
+    public function WishList()
+    {
+        return $this->hasMany(Wishlist::class,'user_id','id');
+    }
+
 }

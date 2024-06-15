@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Product extends Model
 {
     use HasFactory, SoftDeletes;
+
     protected $table = 'products';
 
     protected $fillable = [
@@ -29,18 +30,26 @@ class Product extends Model
 
     public function Brand()
     {
-        return $this->belongsTo(Brand::class,'brand_id','id');
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
+
     public function Color()
     {
-        return $this->belongsTo(Color::class,'color_id','id');
+        return $this->belongsTo(Color::class, 'color_id', 'id');
     }
+
     public function Size()
     {
-        return $this->belongsTo(Size::class,'size_id','id');
+        return $this->belongsTo(Size::class, 'size_id', 'id');
     }
+
     public function ProductCategory()
     {
-        return $this->belongsTo(ProductCategory::class,'product_category_id','id');
+        return $this->belongsTo(ProductCategory::class, 'product_category_id', 'id');
+    }
+
+    public function WishList()
+    {
+        return $this->hasMany(WishList::class, 'product_id', 'id');
     }
 }
