@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Api\Client\WishList;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\WishlistResource;
-use App\Models\Product;
-use App\Models\User;
 use App\Models\Wishlist;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Mockery\Exception;
-use function Laravel\Prompts\select;
 
 class WishListController extends Controller
 {
