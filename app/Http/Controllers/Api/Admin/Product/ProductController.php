@@ -211,6 +211,10 @@ class ProductController extends Controller
             if($product->WishList()->exists()) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
             }
+
+            if($product->Cart()->exists()) {
+                return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
+            }
             $product->forceDelete();
 
             !empty($product->brand_id) && $product->brand_id = $product->Brand?->name;
