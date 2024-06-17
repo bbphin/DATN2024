@@ -47,8 +47,6 @@ require_once __DIR__ . '/wishlist.php';
 require_once __DIR__ . '/review.php';
 // Cart
 require_once __DIR__ . '/cart.php';
-require_once __DIR__ . '/blog.php';
-require_once __DIR__ . '/account.php';
 
 
 
