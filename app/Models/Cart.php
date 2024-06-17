@@ -11,10 +11,23 @@ class Cart extends Model
 
     protected $table = 'carts';
 
-    protected $fillabel = [
+    protected $fillable = [
         'user_id',
         'product_id',
         'quantity',
-        'price'
+        'price',
+        'total_price',
+        'size_id',
+        'color_id',
     ];
+
+
+    public function Product()
+    {
+        return $this->belongsTo(Product::class,'product_id','id');
+    }
+    public function User()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
 }
