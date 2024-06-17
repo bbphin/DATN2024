@@ -43,6 +43,14 @@ require_once __DIR__ . '/product.php';
 require_once __DIR__ . '/coupon.php';
 // Wishlist
 require_once __DIR__ . '/wishlist.php';
+// Review
+require_once __DIR__ . '/review.php';
+
+
+
+
+
+
 Route::prefix('auth')->group(function () {
     Route::post('signup', [RegisterController::class, 'register'])->name('signup');
 
