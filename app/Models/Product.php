@@ -52,4 +52,10 @@ class Product extends Model
     {
         return $this->hasMany(WishList::class, 'product_id', 'id');
     }
+
+
+    public function Cart()
+    {
+        return $this->hasMany(Cart::class, 'product_id', 'id');
+    }
 }
