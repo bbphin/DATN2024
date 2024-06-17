@@ -45,7 +45,8 @@ require_once __DIR__ . '/coupon.php';
 require_once __DIR__ . '/wishlist.php';
 // Review
 require_once __DIR__ . '/review.php';
-
+// Cart
+require_once __DIR__ . '/cart.php';
 
 
 
