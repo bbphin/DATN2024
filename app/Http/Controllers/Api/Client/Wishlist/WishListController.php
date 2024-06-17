@@ -12,6 +12,12 @@ use Mockery\Exception;
 
 class WishListController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
+    
     /**
      * Display a listing of the resource.
      */
@@ -54,9 +60,10 @@ class WishListController extends Controller
     public function store(Request $request)
     {
         try {
+            $user = Auth::guard('api')->user();
             $wishlist = Wishlist::firstOrCreate ([
                 'product_id' => $request->product_id,
-                'user_id' => $request->user_id,
+                'user_id' => $user->user_id,
             ]);
             return ApiResponse(true, Response::HTTP_CREATED,messageResponseActionSuccess(),new WishlistResource($wishlist));
         }catch (\Exception $e) {
