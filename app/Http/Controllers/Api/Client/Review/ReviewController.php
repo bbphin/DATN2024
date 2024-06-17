@@ -102,7 +102,7 @@ class ReviewController extends Controller
     public function destroy(string $id)
     {
         try {
-            $user = Auth::guard('api')->user();3
+            $user = Auth::guard('api')->user();
             $review = Review::find($id);
             if(empty($review)){
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
