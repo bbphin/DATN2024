@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->tinyInteger('user_id')->comment('id cua nguoi dung');
             $table->tinyInteger('product_id')->comment('id cua san pham');
+            $table->tinyInteger('size_id')->comment('id cua size');
+            $table->tinyInteger('color_id')->comment('id cua mau');
             $table->integer('quantity')->comment('so luong cua 1 san pham da mua');
-            $table->decimal('price')->comment('gia cua tong so luong san pham da mua');
+            $table->decimal('price')->comment('gia cua so luong san pham da mua');
+            $table->integer('total_price')->comment('gia cua tong so luong san pham da mua');
             $table->timestamps();
         });
     }
