@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\Client\Subscriber;
 
 use App\Http\Requests\Subscriber\AddSubscriberFormRequest;
 use App\Mail\SubscriberMail;
 use App\Models\Subscriber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
+use App\Http\Controllers\Controller;
 /**
  * @tags Clients
  */

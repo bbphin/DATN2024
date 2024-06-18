@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Api\Admin\Account;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\AccountFormRequest;
