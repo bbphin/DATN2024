@@ -454,7 +454,8 @@
                                                 <tr>
                                                     <td class="es-m-p0r" valign="top" align="center"
                                                         style="padding:0;Margin:0;width:560px">
-                                                        <table cellpadding="0" cellspacing="0" width="100%" role="none"
+                                                        <table cellpadding="0" cellspacing="0" width="100%"
+                                                            role="none"
                                                             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                             <tr>
                                                                 <td align="center"
@@ -498,12 +499,24 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td align="center" class="es-m-p0r es-m-p0l"
-                                                                    style="padding:0;Margin:0;padding-bottom:5px;padding-top:10px">
-                                                                    <p
-                                                                        style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">
-                                                                        Bạn đã đăng ký thành công nhận thông báo tại {{ env('APP_NAME') }}</p>
+                                                                <td>
+                                                                    <h4 style="text-align:center">Xin chào {{ $user->name }}, Đây là tin nhắn từ {{ env('APP_NAME') }} !</h4>
                                                                 </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center"><p>Cảm ơn bạn đã thanh toán hóa đơn: #INV{{ $order->id }}</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center"><p>Ngày tạo hóa đơn: {{ \Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i:s') }}</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center"><p><b>Trạng thái hóa đơn:</b>{{ $order->order_status == 1 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center"><p>Tổng tiền: tự sửa </p></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td align="center"><p>Bạn có thể xem hoá đơn <a href="tự thêm route vào ">tự thêm route vào </a></p></td>
                                                             </tr>
                                                         </table>
                                                     </td>
@@ -515,12 +528,14 @@
                                                 <tr>
                                                     <td align="left"
                                                         style="Margin:0;padding-top:20px;padding-bottom:20px;padding-left:20px;padding-right:20px">
-                                                        <table cellpadding="0" cellspacing="0" width="100%" role="none"
+                                                        <table cellpadding="0" cellspacing="0" width="100%"
+                                                            role="none"
                                                             style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                             <tr>
-                                                                <td align="left" style="padding:0;Margin:0;width:600px">
-                                                                    <table cellpadding="0" cellspacing="0" width="100%"
-                                                                        role="presentation"
+                                                                <td align="left"
+                                                                    style="padding:0;Margin:0;width:600px">
+                                                                    <table cellpadding="0" cellspacing="0"
+                                                                        width="100%" role="presentation"
                                                                         style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                                         <tr>
                                                                             <td align="center"
@@ -530,32 +545,40 @@
                                                                                     role="presentation"
                                                                                     style="mso-table-lspace:0pt;mso-table-rspace:0pt;border-collapse:collapse;border-spacing:0px">
                                                                                     <tr>
-                                                                                        <td align="center" valign="top"
+                                                                                        <td align="center"
+                                                                                            valign="top"
                                                                                             style="padding:0;Margin:0;padding-right:40px">
                                                                                             <img title="Facebook"
                                                                                                 src="https://xdromd.stripocdn.email/content/assets/img/social-icons/logo-black/facebook-logo-black.png"
-                                                                                                alt="Fb" width="32"
+                                                                                                alt="Fb"
+                                                                                                width="32"
                                                                                                 style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
                                                                                         </td>
-                                                                                        <td align="center" valign="top"
+                                                                                        <td align="center"
+                                                                                            valign="top"
                                                                                             style="padding:0;Margin:0;padding-right:40px">
                                                                                             <img title="Twitter"
                                                                                                 src="https://xdromd.stripocdn.email/content/assets/img/social-icons/logo-black/twitter-logo-black.png"
-                                                                                                alt="Tw" width="32"
+                                                                                                alt="Tw"
+                                                                                                width="32"
                                                                                                 style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
                                                                                         </td>
-                                                                                        <td align="center" valign="top"
+                                                                                        <td align="center"
+                                                                                            valign="top"
                                                                                             style="padding:0;Margin:0;padding-right:40px">
                                                                                             <img title="Instagram"
                                                                                                 src="https://xdromd.stripocdn.email/content/assets/img/social-icons/logo-black/instagram-logo-black.png"
-                                                                                                alt="Inst" width="32"
+                                                                                                alt="Inst"
+                                                                                                width="32"
                                                                                                 style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
                                                                                         </td>
-                                                                                        <td align="center" valign="top"
+                                                                                        <td align="center"
+                                                                                            valign="top"
                                                                                             style="padding:0;Margin:0">
                                                                                             <img title="Youtube"
                                                                                                 src="https://xdromd.stripocdn.email/content/assets/img/social-icons/logo-black/youtube-logo-black.png"
-                                                                                                alt="Yt" width="32"
+                                                                                                alt="Yt"
+                                                                                                width="32"
                                                                                                 style="display:block;border:0;outline:none;text-decoration:none;-ms-interpolation-mode:bicubic">
                                                                                         </td>
                                                                                     </tr>
