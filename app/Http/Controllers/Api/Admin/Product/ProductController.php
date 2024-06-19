@@ -13,6 +13,10 @@ use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Validator;
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -119,7 +123,7 @@ class ProductController extends Controller
             $product->update([
                 'view' => $product->view + 1,
             ]);
-            
+
             !empty($product->brand_id) && $product->brand_id = $product->Brand?->name;
             !empty($product->color_id) && $product->color_id = $product->Color?->name;
             !empty($product->size_id) && $product->size_id = $product->Size?->name;
@@ -206,6 +210,14 @@ class ProductController extends Controller
             $product = Product::withTrashed()->find($id);
             if (empty($product)) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseNotFound(), null);
+            }
+
+            if($product->WishList()->exists()) {
+                return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
+            }
+
+            if($product->Cart()->exists()) {
+                return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
             }
             $product->forceDelete();
 

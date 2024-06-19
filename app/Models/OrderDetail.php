@@ -16,9 +16,8 @@ class OrderDetail extends Model
         'order_id',
         'price',
         'total_price',
-        'quantity',
+        'quantity'
     ];
-
     public function order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
@@ -33,5 +32,4 @@ class OrderDetail extends Model
     {
         return $this->hasOne(Review::class, 'order_id', 'order_id');
     }
-    
 }
