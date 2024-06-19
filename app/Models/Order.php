@@ -33,4 +33,26 @@ class Order extends Model
     public function orderDetails() {
         return $this->hasMany(OrderDetail::class, 'order_id');
     }
+    public function getOrderStatusDescriptionAttribute()
+    {
+        switch ($this->order_status) {
+            case 1:
+                return 'Chưa thanh toán';
+            case 2:
+                return 'Đã thanh toán';
+            default:
+                return 'Không xác định';
+        }
+    }
+    public function getOrderPaymentMethodDescriptionAttribute()
+    {
+        switch ($this->payment_method) {
+            case 1:
+                return 'Thanh toán tại cửa hàng';
+            case 2:
+                return 'Thanh toán online';
+            default:
+                return 'Không xác định';
+        }
+    }
 }
