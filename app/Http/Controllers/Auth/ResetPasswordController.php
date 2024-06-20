@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -44,25 +46,31 @@ class ResetPasswordController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
         $credentials = $request->only('email', 'password', 'password_confirmation', 'token');
-        $status = Password::reset(
-            $credentials,
-            function ($user, $password) use ($request) {
-                $user->password = Hash::make($password);
-                $user->save();
-                event(new PasswordReset($user));
-            }
-        );
-
-        if ($status == Password::PASSWORD_RESET) {
-            $user = User::where('email', $request->input('email'))->first();
-            if (!empty($user)) {
-                if (Hash::check($request->input('password'), $user->password)) {
-                    return $this->createUserApiToken($user, trans($status));
+        $check = DB::table('password_reset_tokens')->where('email', $request->email)->first();
+        if(!$check){
+            return response()->json(['success' => false, 'message' => 'Thông tin không chính xác.'], 400);
+        }
+        $token = $check->token;
+        if ($check && $token) {
+            if ($check->token === $token) {
+                $createdAt = Carbon::parse($check->created_at);
+                $expiresAt = $createdAt->addMinutes(60);
+                $currentTime = now();
+                if ($currentTime->lte($expiresAt)) {
+                    $user = User::where('email', $request->email)->first();
+                    if ($user) {
+                        $user->password = Hash::make($request->password);
+                        $user->save();
+                        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
+                        if (Hash::check($request->input('password'), $user->password)) {
+                            return $this->createUserApiToken($user, trans('change pass'));
+                        }
+                    }
+                    return response()->json(['success' => false, 'message' => 'Thông tin không chính xác.'], 400);
+                }else{
+                    return response()->json(['success' => false, 'message' => 'Token đã hết hạn hoặc không chính xác.'], 400);
                 }
             }
-            return response()->json(['success' => false, 'message' => 'Thông tin không chính xác.'], 400);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Token đã hết hạn hoặc không chính xác.'], 400);
         }
     }
     protected function createUserApiToken($user, $deviceName = null, $message = null): \Illuminate\Http\JsonResponse
