@@ -68,7 +68,7 @@ class CartController extends Controller
 
             $cart = Cart::query()->where([['product_id',$product?->id],['user_id',$user?->id]])->exists();
             if($cart) {
-                return ApiResponse(false,Response::HTTP_OK,'Sản phẩm đã tồn tại trong giỏ hàng');
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Sản phẩm đã tồn tại trong giỏ hàng');
             }
             $createdCart = Cart::create($data);
             return ApiResponse(true,Response::HTTP_CREATED,messageResponseActionSuccess(), new CartResource($createdCart));
@@ -102,9 +102,6 @@ class CartController extends Controller
         try {
             $cart = Cart::find($id);
             $product = Product::find($request?->product_id);
-            if($product?->quantity < $request->quantity) {
-                return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Số lượng sản phẩm không đúng',null);
-            }
 
             if($request->quantity > $product?->quantity) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Cập nhật không thành công, do không đủ số lương');
