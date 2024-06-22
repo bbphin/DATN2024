@@ -1,11 +1,5 @@
 <?php
 
-<<<<<<< HEAD
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\Admin\Account\AccountController;
-
-Route::apiResource('account', AccountController::class);
-=======
 use App\Http\Controllers\Api\Admin\Account\AccountController;
 use App\Http\Controllers\Api\Client\Account\ClientAccountController;
 use App\Http\Controllers\Test\CheckController;
@@ -35,4 +29,3 @@ Route::middleware('checkauth')->group(function () {
         Route::get('test/staff', [CheckController::class, 'staff'])->name('teststaff');
     });
 });
->>>>>>> 0744484ccd5933fc2dc799d2eb9ed759d9344b29
