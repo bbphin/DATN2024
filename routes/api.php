@@ -55,4 +55,7 @@ require_once __DIR__ . '/subscriber.php';
 require_once __DIR__ . '/account.php';
 // Dashboard - Home Admin
 require_once __DIR__ . '/dashboard.php';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 1788e7318097979939cdc50bdb650bdbc87d9797
