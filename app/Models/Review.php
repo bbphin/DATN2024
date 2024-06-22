@@ -4,31 +4,67 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-
-class Review extends Model
+use Illuminate\Database\Eloquent\SoftDeletes;
+class Product extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $table = 'reviews';
+    protected $table = 'products';
 
     protected $fillable = [
-        'user_id',
-        'product_id',
-        'content',
-        'rating'
+        'brand_id',
+        'color_id',
+        'size_id',
+        'product_category_id',
+        'name',
+        'slug',
+        'image',
+        'thumbnail_image',
+        'sort_description',
+        'description',
+        'price',
+        'quantity',
+        'view',
+        'is_published',
     ];
 
-    public function product() {
-        return $this->belongsTo(Product::class, 'product_id', 'id');
-    }
-    
-    public function Product()
+    public function Brand()
     {
-        return $this->belongsTo(Product::class,'product_id','id');
+        return $this->belongsTo(Brand::class, 'brand_id', 'id');
     }
 
-    public function User()
+    public function Color()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(Color::class, 'color_id', 'id');
+    }
+
+    public function Size()
+    {
+        return $this->belongsTo(Size::class, 'size_id', 'id');
+    }
+
+    public function ProductCategory()
+    {
+        return $this->belongsTo(ProductCategory::class, 'product_category_id', 'id');
+    }
+
+    public function WishList()
+    {
+        return $this->hasMany(WishList::class, 'product_id', 'id');
+    }
+
+
+    public function Cart()
+    {
+        return $this->hasMany(Cart::class, 'product_id', 'id');
+
+    }
+     public function review()
+    {
+        return $this->hasMany(Review::class, 'product_id','id');
+    }
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class, 'product_id','id');
     }
 }
