@@ -320,9 +320,6 @@ class ProductController extends Controller
             $keyword = $request?->keyword;
             $data = Product::query()->where('name','LIKE',"{$keyword}%")->get();
 
-            if($data->count() < 0) {
-                return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
-            }
             return ApiResponse(true, Response::HTTP_OK,messageResponseData(),ProductResource::collection($data));
         }catch (\Exception $e) {
             return ApiResponse(false,Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
