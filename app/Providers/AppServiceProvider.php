@@ -21,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        
         Scramble::extendOpenApi(function (OpenApi $openApi) {
             $openApi->secure(
                 SecurityScheme::http('bearer', 'JWT')

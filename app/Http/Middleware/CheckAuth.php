@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\PersonalAccessToken;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,17 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckAuth
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     */
-
     public function handle(Request $request, Closure $next, ...$roles)
     {
         $token = $request->bearerToken(); //
 
-        if (Auth::guard('api')->check()) {
+        if (Auth::guard('sanctum')->check()) {
             return $next($request);
         } else {
             if ($token) {
@@ -27,10 +22,7 @@ class CheckAuth
             } else {
                 $message = 'Vui lòng đăng nhập tài khoản';
             }
-            return response()->json([
-                'success' => false,
-                'message' => $message,
-            ], 401);
+            return errors($message);
         }
     }
 }

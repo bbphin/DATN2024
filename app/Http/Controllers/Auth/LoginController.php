@@ -10,6 +10,8 @@ use App\Models\User;
 use Dedoc\Scramble\Support\Generator\SecurityScheme;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\Response;
+
 /**
  * @tags Auth
  */
@@ -22,42 +24,42 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+        try {
+            $validator = Validator::make($request->all(), [
 
-        $validator = Validator::make($request->all(), [
+                /**
+                 * @example nguyenthanhsont123@gmail.com
+                 */
+                'email' => 'required|string|email',
+                /**
+                 * @example thanhson
+                 */
+                'password' => 'required|string',
+            ]);
 
-            /**
-             * @example nguyenthanhsont123@gmail.com
-             */
-            'email' => 'required|string|email',
-            /**
-             * @example thanhson
-             */
-            'password' => 'required|string',
-        ]);
+            if ($validator->fails()) {
+                return validationErrors($validator->errors());
+            }
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            if (!auth()->attempt($request->only('email', 'password'))) { // check người dùng | ! khác
+                return errors('Tài khoản hoặc mật khẩu không đúng.');
+            }
+
+            $user = auth()->guard('api')->user(); // lấy data
+            $user->tokens()->delete(); // xoá token
+            $token = $user->createToken($request->email, $user->withAccessTokenAbilities()); // tạo mới token
+
+            $extra = [
+                'extra' => [
+                    'authToken' => $token->plainTextToken,
+                    'tokenType' => 'Bearer',
+                    'role' => $user->role,
+                ],
+            ];
+            return success('Đăng nhập thành công', new UserResource($user, $extra));
+        } catch (\Exception $e) {
+            return errors($e->getMessage());
         }
-
-        if (!auth()->attempt($request->only('email', 'password'))) { // check người dùng | ! khác
-            return response()->json(['success' => false, 'message' => 'Tài khoản hoặc mật khẩu không đúng.'], 401);
-        }
-
-        $user = auth()->guard('api')->user(); // lấy data
-        $user->tokens()->delete(); // xoá token
-        $token = $user->createToken($request->email, $user->withAccessTokenAbilities()); // tạo mới token
-
-        $data = [
-            'success' => true,
-            'message' => 'Đăng nhập thành công',
-            'data' => new UserResource($user),
-            'extra' => [
-                'authToken' => $token->plainTextToken,
-                'tokenType' => 'Bearer',
-                'role' => $user->role,
-            ],
-        ];
-        return response()->json($data, 200);
     }
     /**
      * Đăng xuất.
@@ -66,11 +68,15 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        if (Auth::guard('api')->check()) { // check login
-            Auth::guard('api')->user()->tokens()->delete();
-            return response()->json(['success' => true, 'message' => 'Đăng xuất thành công'], 200);
-        } else {
-            return response()->json(['success' => false, 'message' => 'Không tìm thấy người dùng đăng nhập'], 404);
+        try {
+            if (Auth::guard('api')->check()) { // check login
+                Auth::guard('api')->user()->tokens()->delete();
+                return success('Đăng xuất thành công');
+            } else {
+                return errors('Không tìm thấy người dùng đăng nhập.');
+            }
+        } catch (\Exception $e) {
+            return errors($e->getMessage());
         }
     }
 }

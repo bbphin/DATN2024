@@ -24,6 +24,6 @@ class ResetPassword extends Mailable
         return $this->view('emails.reset_password')
             ->with([
                 'resetUrl' => $this->resetLink,
-            ])->subject('Thay đổi mật khẩu tại ' . env('APP_NAME'));
+            ])->subject('Thay đổi mật khẩu tại MW SPORT');
     }
 }

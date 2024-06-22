@@ -1,6 +1,9 @@
 <?php
 
 use App\Models\Option;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 function getOption($name)
 {
@@ -17,3 +20,16 @@ function getRandomPassword($length = 8)
     }
     return $password;
 }
+function validationErrors($errors): \Illuminate\Http\JsonResponse
+{
+    return ApiResponse(false,Response::HTTP_UNPROCESSABLE_ENTITY, $errors);
+}
+function errors($errors): \Illuminate\Http\JsonResponse
+{
+    return ApiResponse(false,Response::HTTP_BAD_REQUEST, $errors);
+}
+function success($message,$data=NULL): \Illuminate\Http\JsonResponse
+{
+    return ApiResponse(true,Response::HTTP_OK, $message,$data);
+}
+
