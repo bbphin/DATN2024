@@ -4,67 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-class Product extends Model
-{
-    use HasFactory, SoftDeletes;
 
-    protected $table = 'products';
+class Review extends Model
+{
+    use HasFactory;
+
+    protected $table = 'reviews';
 
     protected $fillable = [
-        'brand_id',
-        'color_id',
-        'size_id',
-        'product_category_id',
-        'name',
-        'slug',
-        'image',
-        'thumbnail_image',
-        'sort_description',
-        'description',
-        'price',
-        'quantity',
-        'view',
-        'is_published',
+        'user_id',
+        'product_id',
+        'content',
+        'rating'
     ];
 
-    public function Brand()
+    public function product() {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
+    
+    public function Product()
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'id');
+        return $this->belongsTo(Product::class,'product_id','id');
     }
 
-    public function Color()
+    public function User()
     {
-        return $this->belongsTo(Color::class, 'color_id', 'id');
-    }
-
-    public function Size()
-    {
-        return $this->belongsTo(Size::class, 'size_id', 'id');
-    }
-
-    public function ProductCategory()
-    {
-        return $this->belongsTo(ProductCategory::class, 'product_category_id', 'id');
-    }
-
-    public function WishList()
-    {
-        return $this->hasMany(WishList::class, 'product_id', 'id');
-    }
-
-
-    public function Cart()
-    {
-        return $this->hasMany(Cart::class, 'product_id', 'id');
-
-    }
-     public function review()
-    {
-        return $this->hasMany(Review::class, 'product_id','id');
-    }
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetail::class, 'product_id','id');
+        return $this->belongsTo(User::class,'user_id','id');
     }
 }
