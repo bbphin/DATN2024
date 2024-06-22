@@ -516,17 +516,6 @@
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td
-                                                                    style="padding:0;Margin:0;padding-bottom:5px;padding-top:10px">
-                                                                    <p
-                                                                        style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">
-                                                                        <b>Hoặc truy cập đường dẫn:</b>
-                                                                        <a
-                                                                            href="text-decoration:underline;color:#5c68e2;font-size:14px;text-align:left">{{ $resetUrl }}</a>
-                                                                    </p>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
                                                                 <td align="center"
                                                                     style="padding:0;Margin:0;padding-top:10px;padding-bottom:10px">
                                                                     <span class="es-button-border"
@@ -535,6 +524,17 @@
                                                                             style="mso-style-priority:100 !important;text-decoration:none;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF;font-size:18px;padding:10px 20px 10px 20px;display:inline-block;background:#FD3D52;border-radius:6px;font-family:arial, 'helvetica neue', helvetica, sans-serif;font-weight:normal;font-style:normal;line-height:24px;width:auto;text-align:center;mso-padding-alt:0;mso-border-alt:10px solid #FD3D52;padding-left:30px;padding-right:30px">
                                                                             XÁC NHẬN TÀI KHOẢN
                                                                         </a></span>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td
+                                                                    style="padding:0;Margin:0;padding-bottom:5px;padding-top:10px">
+                                                                    <p
+                                                                        style="Margin:0;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;font-family:arial, 'helvetica neue', helvetica, sans-serif;line-height:21px;color:#333333;font-size:14px">
+                                                                        <b>Hoặc truy cập đường dẫn:</b>
+                                                                        <a
+                                                                            href="text-decoration:underline;color:#5c68e2;font-size:14px;text-align:left">{{ $resetUrl }}</a>
+                                                                    </p>
                                                                 </td>
                                                             </tr>
                                                             <tr>

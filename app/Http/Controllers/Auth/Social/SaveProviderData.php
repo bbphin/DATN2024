@@ -88,8 +88,7 @@ trait SaveProviderData
             if (empty($message)) {
                 $message = $this->userNotSavedError ?? '';
             }
-
-            return response()->json(['success'=>false,'message'=>$message]);
+            return errors($message);
         }
     }
 
@@ -107,9 +106,7 @@ trait SaveProviderData
             $token = $user->createToken($deviceName);
 
             $data = [
-                'success' => true,
-                'result'  => new UserResource($user),
-                'extra'   => [
+                'extra' => [
                     'authToken' => $token->plainTextToken,
                     'tokenType' => 'Bearer',
                 ],
@@ -118,9 +115,10 @@ trait SaveProviderData
             // If the user has not yet specified the type of account, redirect him to his user area where he can do so.
             $data['extra']['userTypeId'] = $user->id ?? null;
 
-            return response()->json($data);
+            // return response()->json($data);
+            return success('Lưu thành công', new UserResource($user, $data));
         } else {
-            return response()->json(['success'=> false,'message' => 'Không thể đăng nhập tài khoản này.']);
+            return errors('Không thể đăng nhập tài khoản này.');
         }
     }
 

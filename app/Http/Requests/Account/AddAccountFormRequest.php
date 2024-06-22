@@ -2,8 +2,11 @@
 
 namespace App\Http\Requests\Account;
 
-use Illuminate\Foundation\Http\FormRequest;
 
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 class AddAccountFormRequest extends FormRequest
 {
     /**
@@ -55,18 +58,9 @@ class AddAccountFormRequest extends FormRequest
     }
 
 
-    public function withValidator($validator)
+    protected function failedValidation(Validator $validator)
     {
-        $validator->after(function ($validator) {
-            if ($validator->errors()->count() > 0) {
-                throw new \Illuminate\Validation\ValidationException(
-                    $validator,
-                    response()->json([
-                        'success' => false,
-                        'errors' => $validator->errors()
-                    ], 422)
-                );
-            }
-        });
+        $response = validationErrors($validator->errors());
+        throw (new ValidationException($validator, $response));
     }
 }
