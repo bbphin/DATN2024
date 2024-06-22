@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Api\Admin\Brand;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BrandRequest;
 use App\Http\Resources\BrandResource;
+use App\Http\Resources\ProductResource;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class BrandController extends Controller
@@ -79,6 +81,26 @@ class BrandController extends Controller
             }
             $brand->delete();
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), new BrandResource($brand));
+        } catch (\Exception $e) {
+            return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $validate = Validator::make($request->all(), [
+                'keyword' => 'required'
+            ], [
+                'keyword.required' => 'Vui lòng nhập thông tin để tìm kiếm'
+            ]);
+            if ($validate->fails()) {
+                return ApiResponse(false, Response::HTTP_BAD_REQUEST, $validate->errors(), null);
+            }
+            $keyword = $request?->keyword;
+            $data = Brand::query()->where('name', 'LIKE', "{$keyword}%")->get();
+
+            return ApiResponse(true, Response::HTTP_OK, messageResponseData(), ProductResource::collection($data));
         } catch (\Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
