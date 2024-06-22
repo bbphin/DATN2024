@@ -7,14 +7,16 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+    protected $extra;
+
+    public function __construct($resource, $extra = null)
+    {
+        parent::__construct($resource);
+        $this->extra = $extra;
+    }
     public function toArray(Request $request): array
     {
-        return [
+        $userArray = [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
@@ -22,5 +24,11 @@ class UserResource extends JsonResource
             'avatar' => $this->avatar,
             'role' => $this->role,
         ];
+
+        if (is_array($this->extra)) {
+            $userArray = array_merge($userArray, $this->extra);
+        }
+
+        return $userArray;
     }
 }

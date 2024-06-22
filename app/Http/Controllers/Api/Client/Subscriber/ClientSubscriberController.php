@@ -8,6 +8,7 @@ use App\Models\Subscriber;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\Controller;
+
 /**
  * @tags Clients
  */
@@ -18,21 +19,23 @@ class ClientSubscriberController extends Controller
      */
     public function add(AddSubscriberFormRequest $request)
     {
-        $data = $request->validated();
-        $subscriber = new Subscriber;
-        $subscriber->fill($data);
-        $subscriber->save();
-        Mail::to($subscriber->email)->send(new SubscriberMail());
-        $response = [
-            'success' => true,
-            'message' => 'Đăng ký thành công',
-            'data' => $data,
-            'extra' => [
-                'authToken' => request()->bearerToken(),
-                'tokenType' => 'Bearer',
-                'role' => auth()->guard('api')->user()->role,
-            ],
-        ];
-        return response()->json($response, 200);
+        try {
+            $data = $request->validated();
+            $subscriber = new Subscriber;
+            $subscriber->fill($data);
+            $subscriber->save();
+            Mail::to($subscriber->email)->send(new SubscriberMail());
+            $response = [
+                'data' => $data,
+                'extra' => [
+                    'authToken' => request()->bearerToken(),
+                    'tokenType' => 'Bearer',
+                    'role' => auth()->guard('api')->user()->role,
+                ],
+            ];
+            return success('Đăng ký nhận thông báo thành công',$response);
+        } catch (\Exception $e) {
+            return errors($e->getMessage());
+        }
     }
 }

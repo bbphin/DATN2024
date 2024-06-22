@@ -21,45 +21,47 @@ class RegisterController extends Controller
      */
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            /**
-             * @example Nguyễn Thành Sơn
-            
-             */
+        try {
+            $validator = Validator::make($request->all(), [
+                /**
+                 * @example Nguyễn Thành Sơn
 
-            'name' => 'required|string|max:100',
-            /**
-             * @example nguyenthanhsont123@gmail.com
-             */
-            'email' => 'required|string|email|max:255|unique:users',
+                 */
 
-            'password' => 'required|string|min:5',
-        ]);
+                'name' => 'required|string|max:100',
+                /**
+                 * @example nguyenthanhsont123@gmail.com
+                 */
+                'email' => 'required|string|email|max:255|unique:users',
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+                'password' => 'required|string|min:5',
+            ]);
+
+            if ($validator->fails()) {
+                return validationErrors($validator->errors());
+            }
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'role' => 0,
+                'password' => Hash::make($request->password),
+            ]);
+            // token check login FE
+            $user->tokens()->delete();
+            /** @ignoreParam */
+            $deviceName = $request->input('device_name', $request->email);
+            $token = $user->createToken($deviceName);
+
+            $extra = [
+                'extra' => [
+                    'authToken' => $token->plainTextToken,
+                    'tokenType' => 'Bearer',
+                    'role' => $user->role,
+                ],
+            ];
+            return success('Đăng ký thành công', new UserResource($user, $extra));
+        } catch (\Exception $e) {
+            return errors($e->getMessage());
         }
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => 0,
-            'password' => Hash::make($request->password),
-        ]);
-        // token check login FE
-        $user->tokens()->delete();
-        /** @ignoreParam */
-        $deviceName = $request->input('device_name', $request->email);
-        $token = $user->createToken($deviceName);
-
-        $data = [
-            'success' => true,
-            'result' => new UserResource($user),
-            'extra' => [
-                'authToken' => $token->plainTextToken,
-                'tokenType' => 'Bearer',
-            ],
-        ];
-
-        return response()->json($data, 201);
     }
 }
