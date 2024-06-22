@@ -1,8 +1,8 @@
 <?php
 
-function ApiResponse($success = true, $statusCode = null, $message = null, $data = null)
+function ApiResponse($success = true, $statusCode = null, $message = null, $data = null,$type=NULL)
 {
-    if ($success) {
+    if ($success || $type=="custom") {
         return response()->json([
             'success' => $success,
             'message' => $message,

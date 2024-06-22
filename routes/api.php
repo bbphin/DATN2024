@@ -2,6 +2,16 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Auth\SocialController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Admin\SubscriberController;
+use App\Http\Controllers\ClientSubscriberController;
+use App\Http\Controllers\Test\CheckController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -31,5 +41,22 @@ require_once __DIR__ . '/product_category.php';
 require_once __DIR__ . '/product.php';
 // Coupon
 require_once __DIR__ . '/coupon.php';
+<<<<<<< HEAD
 
 
+=======
+// Wishlist
+require_once __DIR__ . '/wishlist.php';
+// Review
+require_once __DIR__ . '/review.php';
+// Cart
+require_once __DIR__ . '/cart.php';
+// Auth
+require_once __DIR__ . '/authencation.php';
+// Subscriber
+require_once __DIR__ . '/subscriber.php';
+// Account
+require_once __DIR__ . '/account.php';
+// Dashboard - Home Admin
+require_once __DIR__ . '/dashboard.php';
+>>>>>>> 0744484ccd5933fc2dc799d2eb9ed759d9344b29

@@ -5,12 +5,19 @@ namespace App\Http\Controllers\Api\Admin\ProductCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ProductCategoryRequest;
 use App\Http\Resources\ProductCategoryResource;
+use App\Http\Resources\ProductResource;
 use App\Models\ProductCategory;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class ProductCategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth:api');
+    }
     /**
      * Display a listing of the resource.
      */
@@ -106,6 +113,26 @@ class ProductCategoryController extends Controller
             return ApiResponse(true,Response::HTTP_OK,messageResponseActionSuccess(),new ProductCategoryResource($productCategory));
         }catch (\Exception $e) {
             return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
+        }
+    }
+
+    public function search(Request $request)
+    {
+        try {
+            $validate = Validator::make($request->all(), [
+                'keyword' => 'required'
+            ], [
+                'keyword.required' => 'Vui lòng nhập thông tin để tìm kiếm'
+            ]);
+            if ($validate->fails()) {
+                return ApiResponse(false, Response::HTTP_BAD_REQUEST, $validate->errors(), null);
+            }
+            $keyword = $request?->keyword;
+            $data = ProductCategory::query()->where('name', 'LIKE', "{$keyword}%")->get();
+
+            return ApiResponse(true, Response::HTTP_OK, messageResponseData(), ProductResource::collection($data));
+        } catch (\Exception $e) {
+            return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
 }
