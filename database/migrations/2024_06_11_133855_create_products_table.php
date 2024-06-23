@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('thumbnail_image')->nullable()->comment('anh cua san pham');
             $table->string('sort_description')->nullable()->comment('mo ta ngan cua san pham');
             $table->text('description')->nullable()->comment('mo ta cua san pham');
-            $table->decimal('price')->comment('gia cua san pham');
+            $table->integer('price')->comment('gia cua san pham');
             $table->integer('quantity')->comment('so luong cua san pham');
             $table->integer('view')->comment('luot xem cua san pham')->default('0');
             $table->integer('is_published')->comment('trang thai active cua san pham -> 1> active, 2> unactive')->default('1');

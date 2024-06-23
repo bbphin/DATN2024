@@ -6,10 +6,10 @@ use App\Http\Controllers\Test\CheckController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('checkauth')->prefix('account')->name('account.')->group(function () {
-    Route::get('account/getinfo', [ClientAccountController::class, 'index'])->name('getInfo');
-    Route::get('account/statistical', [ClientAccountController::class, 'statistical'])->name('getStatistical');
-    Route::get('account/invoice', [ClientAccountController::class, 'invoice'])->name('getInvoice');
-    Route::post('account/changepassword', [ClientAccountController::class, 'changePassword'])->name('postChangePassword');
+    Route::get('get-info', [ClientAccountController::class, 'index'])->name('getInfo');
+    Route::get('statistical', [ClientAccountController::class, 'statistical'])->name('getStatistical');
+    Route::get('invoice', [ClientAccountController::class, 'invoice'])->name('getInvoice');
+    Route::post('change-password', [ClientAccountController::class, 'changePassword'])->name('postChangePassword');
 });
 Route::middleware('checkauth')->group(function () {
     Route::middleware('checkadmin')->prefix('admin')->name('admin.')->group(function () {
