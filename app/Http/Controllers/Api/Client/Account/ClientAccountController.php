@@ -25,9 +25,11 @@ class ClientAccountController extends Controller
         try {
             $user = Auth::guard('api')->user();
             $data = [
+                'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'phone' => $user->phone,
+                'address' => $user->address,
                 'balance' => $user->balance,
                 'is_banned' => $user->is_banned,
             ];
