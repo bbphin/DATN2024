@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Client\Order;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\OrderRequest;
+use App\Http\Resources\OrderResource;
 use App\Mail\InvoiceMail;
 use App\Models\Cart;
 use App\Models\Order;
@@ -27,9 +28,19 @@ class OrderController extends Controller
     public function index()
     {
         try {
-
+            $data = Order::with(['User','OrderDetail'])->where('user_id', Auth::guard()->id())->paginate(5);
+            $result = [
+                'data' => OrderResource::collection($data),
+                'meta' => [
+                    'per_page' => $data->perPage(),
+                    'current_page' => $data->currentPage(),
+                    'total' => $data->total(),
+                    'last_page' => $data->lastPage(),
+                ],
+            ];
+            return ApiResponse(true,Response::HTTP_OK,messageResponseData(),$result);
         }catch (\Exception $e) {
-
+            return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
         }
     }
 
