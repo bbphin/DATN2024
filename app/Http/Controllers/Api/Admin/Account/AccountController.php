@@ -2,21 +2,9 @@
 
 namespace App\Http\Controllers\Api\Admin\Account;
 
+use App\Http\Controllers\Api\Admin\Account\Response;
+use App\Http\Controllers\Api\Admin\Account\AccountResource;
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
-use App\Http\Requests\AccountRequest;
-use App\Http\Resources\AccountResource;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-
-class AccountController extends Controller
-{
-    /**
-     * Hiển thị danh sách người dùng.
-     *
-     * @return \Illuminate\Http\JsonResponse
-=======
 use App\Http\Requests\Account\AccountFormRequest;
 use App\Http\Requests\Account\AddAccountFormRequest;
 use App\Http\Requests\Account\EditAccountFormRequest;
@@ -33,47 +21,17 @@ class AccountController extends Controller
     /**
      * @authenticated
      * Danh sách người dùng
->>>>>>> 0744484ccd5933fc2dc799d2eb9ed759d9344b29
      */
     public function index()
     {
-        try {
-<<<<<<< HEAD
-            $users = User::latest()->paginate(10); // Lấy danh sách người dùng, phân trang mỗi trang 10 người dùng
-            return ApiResponse(true, Response::HTTP_OK, 'Successfully fetched users', AccountResource::collection($users));
-        } catch (\Exception $e) {
-            return ApiResponse(false, Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage(), null);
-=======
-            $data = User::select('id', 'name', 'email', 'role', 'balance', 'is_banned', 'created_at')->get();
-            $response = [
-                'data' => $data,
-                'extra' => [
-                    'authToken' => request()->bearerToken(),
-                    'tokenType' => 'Bearer',
-                    'role' => auth()->guard('api')->user()->role,
-                ],
-            ];
-            return success('In danh sách người dùng thành công', $response);
-        } catch (\Exception $e) {
-            return errors($e->getMessage());
->>>>>>> 0744484ccd5933fc2dc799d2eb9ed759d9344b29
-        }
-    }
+    //     try {
+    //         $users = User::latest()->paginate(10); // Lấy danh sách người dùng, phân trang mỗi trang 10 người dùng
+    //         return ApiResponse(true, Response::HTTP_OK, 'Successfully fetched users', AccountResource::collection($users));
+    //     } catch (\Exception $e) {
+    //         return ApiResponse(false, Response::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage(), null);
+    //     }
+     }
 
-    /**
-<<<<<<< HEAD
-     * Lưu người dùng mới vào cơ sở dữ liệu.
-     *
-     *
-     */
-    
-
-   
-}
-
-=======
-     * Thêm người dùng
-     */
     public function add(AddAccountFormRequest $request)
     {
         try {
@@ -178,4 +136,4 @@ class AccountController extends Controller
         }
     }
 }
->>>>>>> 0744484ccd5933fc2dc799d2eb9ed759d9344b29
+

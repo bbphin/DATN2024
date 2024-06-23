@@ -41,10 +41,10 @@ require_once __DIR__ . '/product_category.php';
 require_once __DIR__ . '/product.php';
 // Coupon
 require_once __DIR__ . '/coupon.php';
-<<<<<<< HEAD
 
+require_once __DIR__ . '/order.php';
 
-=======
+require_once __DIR__ . '/order_detail.php';
 // Wishlist
 require_once __DIR__ . '/wishlist.php';
 // Review
@@ -59,4 +59,4 @@ require_once __DIR__ . '/subscriber.php';
 require_once __DIR__ . '/account.php';
 // Dashboard - Home Admin
 require_once __DIR__ . '/dashboard.php';
->>>>>>> 0744484ccd5933fc2dc799d2eb9ed759d9344b29
+

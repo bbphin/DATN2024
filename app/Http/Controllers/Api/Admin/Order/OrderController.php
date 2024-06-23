@@ -5,37 +5,45 @@ namespace App\Http\Controllers\Api\Admin\Order;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
+use App\Http\Requests\OrderRequest;
+use App\Http\Resources\OrderResource;
 
 class OrderController extends Controller
 {
     public function index()
     {
-        $orders = Order::all();
-        return response()->json($orders);
+        $orders = Order::with('user', 'product')->get();
+        return OrderResource::collection($orders);
     }
 
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
-        $order = Order::create($request->all());
-        return response()->json($order, 201);
+        $validated = $request->validated();
+        $order = Order::create($validated);
+
+        return new OrderResource($order);
     }
 
     public function show($id)
     {
-        $order = Order::findOrFail($id);
-        return response()->json($order);
+        $order = Order::with('user', 'product')->findOrFail($id);
+        return new OrderResource($order);
     }
 
-    public function update(Request $request, $id)
+    public function update(OrderRequest $request, $id)
     {
+        $validated = $request->validated();
         $order = Order::findOrFail($id);
-        $order->update($request->all());
-        return response()->json($order, 200);
+        $order->update($validated);
+
+        return new OrderResource($order);
     }
 
     public function destroy($id)
     {
-        Order::findOrFail($id)->delete();
+        $order = Order::findOrFail($id);
+        $order->delete();
+
         return response()->json(null, 204);
     }
 }
