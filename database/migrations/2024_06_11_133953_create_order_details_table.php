@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->tinyInteger('product_id')->comment('id của sản phẩm');
             $table->tinyInteger('order_id')->comment('id của đơn hàng');
-            $table->decimal('price')->comment('giả của tổng đơn hàng');
+            $table->integer('price')->comment('giả của tổng đơn hàng');
             $table->integer('quantity')->comment('số lượng mua');
-            $table->decimal('total_price')->comment('tổng giá của sản phẩm');
+            $table->integer('total_price')->comment('tổng giá của sản phẩm');
             $table->timestamps();
         });
     }

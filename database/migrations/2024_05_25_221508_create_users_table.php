@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('password', 255); // mật khẩu
             $table->text('token')->nullable(); // token user
             $table->text('token_google')->nullable(); // token google
-            $table->unsignedBigInteger('avatar')->index()->nullable()->default(1); // ảnh đại diện
+            $table->string('avatar')->index()->default('https://img.icons8.com/?size=100&id=43964&format=png&color=000000')->default(1); // ảnh đại diện
             $table->integer('balance')->default(0); // tiền (ví)
             $table->integer('is_banned')->default(0); // khoá tài khoản
             $table->timestamp('deleted_at')->nullable(); // thùng rác
