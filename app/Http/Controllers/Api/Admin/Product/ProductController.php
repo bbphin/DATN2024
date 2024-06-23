@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Str;
 use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
 use Illuminate\Support\Facades\Validator;
+
 class ProductController extends Controller
 {
     public function __construct()
@@ -68,7 +69,7 @@ class ProductController extends Controller
             $data['slug'] = Str::slug($request?->name);
             $images = $request?->image;
             $thumbnail_images = $request?->thumbnail_image;
-            if($request->hasFile('image') || $request->hasFile('thumbnail_image')) {
+            if ($request->hasFile('image') || $request->hasFile('thumbnail_image')) {
                 if (is_array($images) && is_array($thumbnail_images)) {
                     foreach ($images as $image) {
                         $data['image'] = Cloudinary::upload($image->getRealPath(), array(
@@ -158,7 +159,7 @@ class ProductController extends Controller
             $images = $request?->image;
             $thumbnail_images = $request?->thumbnail_image;
 
-            if($request->hasFile('image') || $request->hasFile('thumbnail_image')) {
+            if ($request->hasFile('image') || $request->hasFile('thumbnail_image')) {
                 if (is_array($images) && is_array($thumbnail_images)) {
                     foreach ($images as $image) {
                         $data['image'] = Cloudinary::upload($image->getRealPath(), array(
@@ -196,7 +197,7 @@ class ProductController extends Controller
             !empty($product->product_category_id) && $product->product_category_id = $product->ProductCategory?->name;
 
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), new ProductResource($product));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
@@ -212,11 +213,11 @@ class ProductController extends Controller
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseNotFound(), null);
             }
 
-            if($product->WishList()->exists()) {
+            if ($product->WishList()->exists()) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
             }
 
-            if($product->Cart()->exists()) {
+            if ($product->Cart()->exists()) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseActionFailed(), null);
             }
             $product->forceDelete();
@@ -227,14 +228,15 @@ class ProductController extends Controller
             !empty($product->product_category_id) && $product->product_category_id = $product->ProductCategory?->name;
 
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), new ProductResource($product));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
 
 
     // xoa mem
-    public function softDelete(string $id) {
+    public function softDelete(string $id)
+    {
         try {
             $product = Product::find($id);
             if (empty($product)) {
@@ -248,8 +250,7 @@ class ProductController extends Controller
             !empty($product->product_category_id) && $product->product_category_id = $product->ProductCategory?->name;
 
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), new ProductResource($product));
-
-        }catch (Exception $e) {
+        } catch (Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
@@ -281,7 +282,7 @@ class ProductController extends Controller
                 $item->product_category_id = $item->ProductCategory?->name;
             });
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), $data);
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
@@ -290,7 +291,7 @@ class ProductController extends Controller
     {
         try {
             $product = Product::onlyTrashed()->find($id);
-            if(empty($product)) {
+            if (empty($product)) {
                 return ApiResponse(false, Response::HTTP_BAD_REQUEST, messageResponseNotFound(), null);
             }
             $product->restore();
@@ -301,7 +302,7 @@ class ProductController extends Controller
             !empty($product->product_category_id) && $product->product_category_id = $product->ProductCategory?->name;
 
             return ApiResponse(true, Response::HTTP_OK, messageResponseActionSuccess(), new ProductResource($product));
-        }catch (\Exception $e) {
+        } catch (\Exception $e) {
             return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
@@ -309,20 +310,20 @@ class ProductController extends Controller
     public function search(Request $request)
     {
         try {
-            $validate = Validator::make($request->all(),[
+            $validate = Validator::make($request->all(), [
                 'keyword' => 'required'
-            ],[
+            ], [
                 'keyword.required' => 'Vui lòng nhập thông tin để tìm kiếm'
             ]);
-            if($validate->fails()) {
-                return ApiResponse(false,Response::HTTP_BAD_REQUEST,$validate->errors(),null);
+            if ($validate->fails()) {
+                return ApiResponse(false, Response::HTTP_BAD_REQUEST, $validate->errors(), null);
             }
             $keyword = $request?->keyword;
-            $data = Product::query()->where('name','LIKE',"{$keyword}%")->get();
+            $data = Product::query()->where('name', 'LIKE', "{$keyword}%")->get();
 
-            return ApiResponse(true, Response::HTTP_OK,messageResponseData(),ProductResource::collection($data));
-        }catch (\Exception $e) {
-            return ApiResponse(false,Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
+            return ApiResponse(true, Response::HTTP_OK, messageResponseData(), ProductResource::collection($data));
+        } catch (\Exception $e) {
+            return ApiResponse(false, Response::HTTP_BAD_REQUEST, $e->getMessage(), null);
         }
     }
 }
