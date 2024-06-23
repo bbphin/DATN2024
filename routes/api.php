@@ -42,7 +42,6 @@ require_once __DIR__ . '/product.php';
 // Coupon
 require_once __DIR__ . '/coupon.php';
 
-require_once __DIR__ . '/order.php';
 
 require_once __DIR__ . '/order_detail.php';
 // Wishlist
@@ -60,3 +59,9 @@ require_once __DIR__ . '/account.php';
 // Dashboard - Home Admin
 require_once __DIR__ . '/dashboard.php';
 
+// Order Client
+require_once __DIR__ . '/order.php';
+
+require_once __DIR__ . '/ordermanagement.php';
+
+require_once __DIR__ . '/user.php';

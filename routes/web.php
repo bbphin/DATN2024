@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\PaymentController;
 
-use App\Http\Controllers\TestPaymentController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -21,11 +20,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('payments', TestPaymentController::class)->only(['index']);
+Route::resource('payments', PaymentController::class)->only(['index']);
 
 
 Route::post('/payments/vnpay-payment', [PaymentController::class, 'vnpayPayment'])->name('payment.vnpay');
-Route::post('/payments/zalo', [PaymentController::class, 'zaloPayment'])->name('payment.zalo');
 
 
 

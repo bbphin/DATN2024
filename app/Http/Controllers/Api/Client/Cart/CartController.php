@@ -32,7 +32,7 @@ class CartController extends Controller
             ->select('carts.*','products.name as product_name','products.price as product_price',
             'products.quantity as product_quantity','products.image as product_image','products.size_id as product_size',
                 'products.brand_id as product_brand','products.color_id as product_color','products.product_category_id as product_category'
-                ,'users.name as user_name')->get();
+                ,'users.name as user_name','users.phone as user_phone','users.address as user_address')->get();
             return ApiResponse(true, Response::HTTP_OK,messageResponseData(),CartResource::collection($data));
         }catch (\Exception $e) {
             return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
