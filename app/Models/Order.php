@@ -24,18 +24,18 @@ class Order extends Model
     {
         return $this->hasOne(Review::class, 'order_id', 'id')->where('user_id', auth()->user()->id);
     }
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id', 'id');
-    }
-    public function orderItems()
-    {
-        return $this->hasMany(OrderDetail::class, 'order_id')
-            ->with(['product']);
-    }
-    public function orderDetails() {
-        return $this->hasMany(OrderDetail::class, 'order_id');
-    }
+//    public function user()
+//    {
+//        return $this->belongsTo(User::class, 'user_id', 'id');
+//    }
+//    public function orderItems()
+//    {
+//        return $this->hasMany(OrderDetail::class, 'order_id')
+//            ->with(['product']);
+//    }
+//    public function orderDetails() {
+//        return $this->hasMany(OrderDetail::class, 'order_id','id');
+//    }
     public function getOrderStatusDescriptionAttribute()
     {
         switch ($this->order_status) {
@@ -58,4 +58,15 @@ class Order extends Model
                 return 'Không xác định';
         }
     }
+
+    public function User()
+    {
+        return $this->belongsTo(User::class,'user_id','id');
+    }
+
+    public function OrderDetail()
+    {
+        return $this->hasMany(OrderDetail::class,'order_id','id');
+    }
+
 }
