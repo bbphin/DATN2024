@@ -37,5 +37,9 @@ return [
     ],
     'stripe' => [
         'secret' => env('STRIPE_SECRET'),
+    ],
+    'payment' => [
+        'payment_terminal' => env('PAYMENT_TERMINAL'),
+        'payment_secret' => env('PAYMENT_SECRET'),
     ]
 ];
