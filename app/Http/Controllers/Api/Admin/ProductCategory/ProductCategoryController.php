@@ -16,7 +16,7 @@ class ProductCategoryController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api');
+        $this->middleware('auth:api')->except('index');
     }
     /**
      * Display a listing of the resource.
