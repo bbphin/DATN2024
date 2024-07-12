@@ -510,13 +510,7 @@
                                                                 <td align="center"><p>Ngày tạo hóa đơn: {{ \Carbon\Carbon::parse($order->created_at)->format('d-m-Y H:i:s') }}</p></td>
                                                             </tr>
                                                             <tr>
-                                                                <td align="center"><p><b>Trạng thái hóa đơn:</b>{{ $order->order_status == 1 ? 'Chưa thanh toán' : 'Đã thanh toán' }}</p></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td align="center"><p>Tổng tiền: tự sửa </p></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td align="center"><p>Bạn có thể xem hoá đơn <a href="tự thêm route vào ">tự thêm route vào </a></p></td>
+                                                                <td align="center"><p><b>Trạng thái hóa đơn:</b>{{ $order->order_status == 1 ? ' Chưa thanh toán' : ' Đã thanh toán' }}</p></td>
                                                             </tr>
                                                         </table>
                                                     </td>

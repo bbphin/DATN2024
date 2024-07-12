@@ -16,7 +16,7 @@ use App\Notifications\UserNotification;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Notification;
-
+use Illuminate\Support\Facades\Cache;
 trait SaveProviderData
 {
     private string $userNotSavedError = "Lỗi không xác định. Dữ liệu người dùng lưu thất bại.";
@@ -105,18 +105,31 @@ trait SaveProviderData
             $deviceName = $user->email;
             $token = $user->createToken($deviceName);
 
-            $data = [
-                'extra' => [
-                    'authToken' => $token->plainTextToken,
-                    'tokenType' => 'Bearer',
-                ],
-            ];
+            // $data = [
+            //     'extra' => [
+            //         'authToken' => $token->plainTextToken,
+            //         'tokenType' => 'Bearer',
+            //     ],
+            // ];
 
-            // If the user has not yet specified the type of account, redirect him to his user area where he can do so.
-            $data['extra']['userTypeId'] = $user->id ?? null;
+            // // If the user has not yet specified the type of account, redirect him to his user area where he can do so.
+            // $data['extra']['userTypeId'] = $user->id ?? null;
 
             // return response()->json($data);
-            return success('Lưu thành công', new UserResource($user, $data));
+            // return success('Đăng nhập thành công', new UserResource($user, $data));
+             $data = [
+                'authToken' => $token->plainTextToken,
+                'tokenType' => 'Bearer',
+                'userTypeId' => $user->id ?? null,
+            ];
+            $redirectUri = Cache::get('redirect_uri_' . request()->ip());
+            // Lấy URL callback từ tham số redirect_uri
+            // $redirectUri = request()->query('redirect');
+            $redirectUrl = $redirectUri . '?' . http_build_query($data);
+            Cache::forget('redirect_uri_' . request()->ip());
+
+            // return response()->json(['url' => $redirectUrl, 'success' => true]);
+            return redirect()->to($redirectUrl);
         } else {
             return errors('Không thể đăng nhập tài khoản này.');
         }

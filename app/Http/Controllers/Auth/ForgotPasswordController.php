@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\Cache;
 /**
  * @tags Auth
  */
@@ -53,13 +53,16 @@ class ForgotPasswordController extends Controller
                 'created_at' => Carbon::now()
             ]);
             if ($password_reset) {
-                $resetLink = url(config('app.url') . route('password.reset', ['token' => $encryptedToken, 'email' => $user->email], false));
-                $mail = Mail::to($user->email)->send(new ResetPassword($resetLink));
-                $message = "Đã gửi thành công. Vui lòng kiểm tra inbox hoặc spam.";
+                $redirectUri = $request->input('redirect_uri');
                 $data= [
                     'email' => $user->email,
                     'token' =>  $encryptedToken,
                 ];
+                // $resetLink = url(config('app.url') . route('password.reset', ['token' => $encryptedToken, 'email' => $user->email], false));
+                $redirectUrl = $redirectUri . '?' . http_build_query($data);
+                $mail = Mail::to($user->email)->send(new ResetPassword($redirectUrl));
+                $message = "Đã gửi thành công. Vui lòng kiểm tra inbox hoặc spam.";
+
                 return success($message, $data);
             } else {
                 return errors('Lỗi trong quá trình thực thi.');

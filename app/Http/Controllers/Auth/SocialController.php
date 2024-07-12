@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
-
+use Illuminate\Support\Facades\Cache;
 /**
  * @tags Auth
  */
@@ -53,6 +53,9 @@ class SocialController extends Controller
             return errors($message);
         }
 
+        $redirectUri = request()->query('redirect_uri');
+        Cache::put('redirect_uri_' . request()->ip(), $redirectUri, now()->addMinutes(1));
+
         // Check if the Provider is enabled
         // $providerIsEnabled = (array_key_exists($provider, $this->networkChecker) && $this->networkChecker[$provider]);
         // if (!$providerIsEnabled) {
@@ -62,8 +65,11 @@ class SocialController extends Controller
 
         // Redirect to the Provider's website
         try {
-            $socialiteObj = Socialite::driver($serviceKey)->stateless();
-            return success('Get link thành công', ['url' => $socialiteObj->redirect()->getTargetUrl()]);
+            $socialiteObj = Socialite::driver($serviceKey)
+            ->stateless()
+            ->with(['redirect'=>$redirectUri]);
+
+        return success('Get link thành công', ['url' => $socialiteObj->redirect()->getTargetUrl()]);
         } catch (\Throwable $e) {
             $message = $e->getMessage();
             if (empty($message)) {
