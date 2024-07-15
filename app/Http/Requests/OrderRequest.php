@@ -26,12 +26,14 @@ class OrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => [Rule::exists('users', 'id')],
             'name' => 'required|string|max:60',
-            'phone' => 'required|max:11',
+            'phone' => 'required|numeric|digits_between:8,11',
             'address' => 'required',
-            'payment_method' => 'in:1,2',
-            'order_status' => 'in:1,2',
+            'payment_method' => 'required|in:COD,VNPAY',
+            /**
+             * @example
+             */
+            'note' => 'nullable|string|max:250'
         ];
     }
 
@@ -43,6 +45,7 @@ class OrderRequest extends FormRequest
             'max' => ':attribute tối đa :max kí tự',
             'required' => ':attribute không được để trống',
             'string' => ':attribute không đúng định dạng',
+            'digits_between' => ':attribute phải có từ :min đến :max chữ số', 
         ];
     }
 
@@ -55,6 +58,7 @@ class OrderRequest extends FormRequest
             'name' => 'Tên người mua',
             'phone' => 'Số điện thoại người mua',
             'address' => 'Địa chỉ người mua',
+            'note' => 'Ghi chú'
         ];
     }
 

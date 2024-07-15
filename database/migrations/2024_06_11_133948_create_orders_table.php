@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('phone')->comment('so dien thoai cua user order');
             $table->string('address')->comment('dia chi cua user order');
             $table->string('order_date')->comment('thời gian order')->nullable();
-            $table->tinyInteger('order_status')->comment('trạng thái order --> 1. chờ xác nhận khi thanh toán off, 2. Xác nhận đơn hàng khi tt onl')->default('1');
-            $table->tinyInteger('payment_method')->comment('phương thức thanh toán --> 1. off, 2. onl')->default('1');
+            $table->string('order_status')->comment('Pending, Success, Cancel')->default('1');
+            $table->string('shipment_status')->comment('ORDERPLACE, PACKED, SHIPPED, INTRANSIT, OUTFORDELIVERY, DELIVERED, DELAYED, EXCEPTION, RETURNED')->default('1');
+            $table->string('payment_method')->comment('COD, VNPAY')->default('1');
+            $table->integer('payment_id')->comment('ID thanh toán khi thanh toán online')->nullable();
             $table->string('note')->comment('ghi chú khi đặt')->nullable();
             $table->timestamps();
         });

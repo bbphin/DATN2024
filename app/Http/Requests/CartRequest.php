@@ -26,7 +26,6 @@ class CartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => [Rule::exists('users','id')],
             'product_id' => [Rule::exists('products','id')],
             'size_id' => [Rule::exists('sizes','id')],
             'color_id' => [Rule::exists('colors','id')],

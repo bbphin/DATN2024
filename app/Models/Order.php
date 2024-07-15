@@ -18,24 +18,25 @@ class Order extends Model
         'order_status',
         'payment_method',
         'order_date',
-        'note'
+        'note',
+        'shipment_status'
     ];
     public function review()
     {
         return $this->hasOne(Review::class, 'order_id', 'id')->where('user_id', auth()->user()->id);
     }
-//    public function user()
-//    {
-//        return $this->belongsTo(User::class, 'user_id', 'id');
-//    }
-//    public function orderItems()
-//    {
-//        return $this->hasMany(OrderDetail::class, 'order_id')
-//            ->with(['product']);
-//    }
-//    public function orderDetails() {
-//        return $this->hasMany(OrderDetail::class, 'order_id','id');
-//    }
+    //    public function user()
+    //    {
+    //        return $this->belongsTo(User::class, 'user_id', 'id');
+    //    }
+    //    public function orderItems()
+    //    {
+    //        return $this->hasMany(OrderDetail::class, 'order_id')
+    //            ->with(['product']);
+    //    }
+    //    public function orderDetails() {
+    //        return $this->hasMany(OrderDetail::class, 'order_id','id');
+    //    }
     public function getOrderStatusDescriptionAttribute()
     {
         switch ($this->order_status) {
@@ -43,6 +44,8 @@ class Order extends Model
                 return 'Chưa thanh toán';
             case 2:
                 return 'Đã thanh toán';
+            case 3:
+                return 'Đã huỷ';
             default:
                 return 'Không xác định';
         }
@@ -51,9 +54,9 @@ class Order extends Model
     {
         switch ($this->payment_method) {
             case 1:
-                return 'Thanh toán tại cửa hàng';
+                return 'Thanh toán COD';
             case 2:
-                return 'Thanh toán online';
+                return 'Thanh toán Online';
             default:
                 return 'Không xác định';
         }
@@ -61,12 +64,11 @@ class Order extends Model
 
     public function User()
     {
-        return $this->belongsTo(User::class,'user_id','id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function OrderDetail()
     {
-        return $this->hasMany(OrderDetail::class,'order_id','id');
+        return $this->hasMany(OrderDetail::class, 'order_id', 'id');
     }
-
 }
