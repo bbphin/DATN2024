@@ -7,8 +7,10 @@ use App\Http\Requests\CartRequest;
 use App\Http\Resources\CartResource;
 use App\Models\Cart;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -97,11 +99,25 @@ class CartController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CartRequest $request, string $id)
+    public function update(Request $request, string $id)
     {
         try {
-            $cart = Cart::find($id);
-            $product = Product::find($request?->product_id);
+            $validator = Validator::make($request->all(), [
+
+                /**
+                 * @example 1
+                 */
+                'quantity' => 'required|numeric|min:1',
+            ]);
+
+            if ($validator->fails()) {
+                return validationErrors($validator->errors());
+            }
+            $cart = Cart::where('id',$id)->where('user_id',Auth::guard('api')->id())->first();
+            if(!$cart) {
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Không tìm thấy thông tin');
+            }
+            $product = Product::find($cart->product_id);
             if($product?->quantity < $request->quantity) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Số lượng sản phẩm không đúng',null);
             }
@@ -128,7 +144,7 @@ class CartController extends Controller
     public function destroy(string $id)
     {
         try {
-            $cart = Cart::find($id);
+            $cart = Cart::where('id',$id)->where('user_id',Auth::guard('api')->id())->first();
             if(empty($cart)) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,messageResponseNotFound(),null);
             }

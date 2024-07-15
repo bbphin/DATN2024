@@ -26,7 +26,6 @@ class CartResource extends JsonResource
             'color' => $this?->Product->Color?->name,
             'size' => $this?->Product->Size?->name,
             'product_category' => $this?->Product->ProductCategory?->name,
-            'category' => $this?->Product->ProductCategory->Category?->name,
         ];
     }
 }
