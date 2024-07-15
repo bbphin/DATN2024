@@ -18,12 +18,12 @@ class OrderDetail extends Model
         'total_price',
         'quantity'
     ];
-    public function order()
+    public function Order()
     {
         return $this->belongsTo(Order::class, 'order_id', 'id');
     }
 
-    public function product()
+    public function Product()
     {
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }

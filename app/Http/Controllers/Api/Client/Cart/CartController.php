@@ -34,7 +34,7 @@ class CartController extends Controller
             ->select('carts.*','products.name as product_name','products.price as product_price',
             'products.quantity as product_quantity','products.image as product_image','products.size_id as product_size',
                 'products.brand_id as product_brand','products.color_id as product_color','products.product_category_id as product_category'
-                ,'users.name as user_name')->get();
+                ,'users.name as user_name','users.phone as user_phone','users.address as user_address')->get();
             return ApiResponse(true, Response::HTTP_OK,messageResponseData(),CartResource::collection($data));
         }catch (\Exception $e) {
             return ApiResponse(false,Response::HTTP_BAD_REQUEST,$e->getMessage(),null);
@@ -70,7 +70,7 @@ class CartController extends Controller
 
             $cart = Cart::query()->where([['product_id',$product?->id],['user_id',$user?->id]])->exists();
             if($cart) {
-                return ApiResponse(false,Response::HTTP_OK,'Sản phẩm đã tồn tại trong giỏ hàng');
+                return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Sản phẩm đã tồn tại trong giỏ hàng');
             }
             $createdCart = Cart::create($data);
             return ApiResponse(true,Response::HTTP_CREATED,messageResponseActionSuccess(), new CartResource($createdCart));
@@ -120,10 +120,6 @@ class CartController extends Controller
             $product = Product::find($cart->product_id);
             if($product?->quantity < $request->quantity) {
                 return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Số lượng sản phẩm không đúng',null);
-            }
-
-            if($request->quantity > $product?->quantity) {
-                return ApiResponse(false,Response::HTTP_BAD_REQUEST,'Cập nhật không thành công, do không đủ số lương');
             }
             if($request->quantity <= 0) {
                 return $cart->delete();

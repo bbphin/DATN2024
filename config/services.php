@@ -35,4 +35,11 @@ return [
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'redirect'      => env('APP_URL') . '/api/auth/google/callback',
     ],
+    'stripe' => [
+        'secret' => env('STRIPE_SECRET'),
+    ],
+    'payment' => [
+        'payment_terminal' => env('PAYMENT_TERMINAL'),
+        'payment_secret' => env('PAYMENT_SECRET'),
+    ]
 ];
