@@ -6,6 +6,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class OrdermanagementResource extends JsonResource
 {
+    
     public function toArray($request)
     {
         return [
@@ -14,6 +15,7 @@ class OrdermanagementResource extends JsonResource
             'order_date' => $this->order_date,
             'order_status' => $this->order_status,
             'payment_method' => $this->payment_method,
+            'shipment_method' => $this->shipment_method,
             'note' => $this->note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

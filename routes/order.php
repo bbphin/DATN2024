@@ -11,4 +11,7 @@ Route::controller(OrderController::class)->middleware('checkauth')->name('order.
     //VNPAY
     Route::get('vnpay/check', 'checkPayVNPAY')->name('checkPayVNPAY');
     //END VNPAY
+
+    Route::get('order/track', 'trackOrder')->name('trackOrder');
+    Route::get('order/download', 'downloadOrder')->name('downloadOrder');
 });

@@ -24,14 +24,14 @@ class OrdermanagementController extends Controller
     public function cancel($id)
     {
         $order = Order::findOrFail($id);
-        $order->update(['order_status' => 'cancelled']);
+        $order->update(['order_status' => 'CANCEL']);
         return response()->json(new OrdermanagementResource($order), 200);
     }
 
     public function Success($id)
     {
         $order = Order::findOrFail($id);
-        $order->update(['order_status' => 'success']);
+        $order->update(['order_status' => 'SUCCESS']);
         return response()->json(new OrdermanagementResource($order), 200);
     }
 }

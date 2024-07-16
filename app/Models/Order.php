@@ -29,14 +29,14 @@ class Order extends Model
     //    {
     //        return $this->belongsTo(User::class, 'user_id', 'id');
     //    }
-    //    public function orderItems()
-    //    {
-    //        return $this->hasMany(OrderDetail::class, 'order_id')
-    //            ->with(['product']);
-    //    }
-    //    public function orderDetails() {
-    //        return $this->hasMany(OrderDetail::class, 'order_id','id');
-    //    }
+       public function orderItems()
+       {
+           return $this->hasMany(OrderDetail::class, 'order_id')
+               ->with(['product']);
+       }
+       public function orderDetails() {
+           return $this->hasMany(OrderDetail::class, 'order_id','id');
+       }
     public function getOrderStatusDescriptionAttribute()
     {
         switch ($this->order_status) {

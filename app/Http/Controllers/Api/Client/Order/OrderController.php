@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 
 class OrderController extends Controller
 {
@@ -90,7 +92,7 @@ class OrderController extends Controller
                     } else {
                         return errors('Xử lý VNPAY thất bại');
                     }
-                }else{
+                } else {
                     return success('Tạo hoá đơn thành công');
                 }
             } else {
@@ -215,7 +217,7 @@ class OrderController extends Controller
             return ['code' => '00', 'message' => 'success', 'data' => $vnp_Url, 'orderCode' => $vnp_TxnRef];
         }
     }
-   public function getPaymentLinkInformation($request, $orderCode)
+    public function getPaymentLinkInformation($request, $orderCode)
     {
         $inputData = array();
         $returnData = array();
@@ -287,7 +289,7 @@ class OrderController extends Controller
         if ($orderCode) {
             $order = Order::where('payment_id', $orderCode)->first();
             $getInfoPayment = $this->getPaymentLinkInformation($request, $orderCode);
-             if ($order && $getInfoPayment->RspCode == 00 && $getInfoPayment) {
+            if ($order && $getInfoPayment->RspCode == 00 && $getInfoPayment) {
                 if ($getInfoPayment->status != $order->order_status) {
                     $data = [
                         'order_status' => $getInfoPayment->status,
@@ -305,7 +307,7 @@ class OrderController extends Controller
                         return errors('Lỗi trong quá trình xử lý');
                     }
                 }
-                if($order->order_status == "PAID"){
+                if ($order->order_status == "PAID") {
                     return success('Đã thanh toán');
                 }
             } else {
@@ -313,6 +315,109 @@ class OrderController extends Controller
             }
         } else {
             return errors('Sai thông tin đơn hàng');
+        }
+    }
+
+    public function trackOrder(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            /**
+             * @example 1 hoặc INV1
+             */
+            'code' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return validationErrors($validator->errors());
+        }
+
+        if ($request->code != null) {
+            $searchCode = preg_replace('/[^0-9]/', '', $request->code);
+            $order = Order::where('id', $searchCode)
+                ->where('user_id', auth()->guard('api')->user()->id)
+                ->first();
+
+            if (!is_null($order)) {
+                $statuses = [
+                    'ORDERPLACE' => 'đã được tạo',
+                    'PACKED' => 'đã nhận và đang đóng gói',
+                    'SHIPPED' => 'đã được vận chuyển',
+                    'INTRANSIT' => 'đang trên đường đến điểm đến',
+                    'OUTFORDELIVERY' => 'đang được giao cho người nhận',
+                    'DELIVERED' => 'đã được giao hàng thành công',
+                    'DELAYED' => 'đã bị trễ hẹn trong quá trình vận chuyển',
+                    'EXCEPTION' => 'đã gặp vấn đề hoặc ngoại lệ trong quá trình vận chuyển',
+                    'RETURNED' => 'đã được hoàn trả lại cho người gửi'
+                ];
+
+                $statusFlow = [
+                    'ORDERPLACE' => ['ORDERPLACE'],
+                    'PACKED' => ['ORDERPLACE', 'PACKED'],
+                    'SHIPPED' => ['ORDERPLACE', 'PACKED', 'SHIPPED'],
+                    'INTRANSIT' => ['ORDERPLACE', 'PACKED', 'SHIPPED', 'INTRANSIT'],
+                    'OUTFORDELIVERY' => ['ORDERPLACE', 'PACKED', 'SHIPPED', 'INTRANSIT', 'OUTFORDELIVERY'],
+                    'DELIVERED' => ['ORDERPLACE', 'PACKED', 'SHIPPED', 'INTRANSIT', 'OUTFORDELIVERY', 'DELIVERED'],
+                    'DELAYED' => ['ORDERPLACE', 'PACKED', 'SHIPPED', 'INTRANSIT', 'OUTFORDELIVERY', 'DELAYED'],
+                    'EXCEPTION' => ['ORDERPLACE', 'PACKED', 'SHIPPED', 'INTRANSIT', 'OUTFORDELIVERY', 'EXCEPTION'],
+                    'RETURNED' => ['ORDERPLACE', 'PACKED', 'SHIPPED', 'INTRANSIT', 'OUTFORDELIVERY', 'RETURNED']
+                ];
+
+                if (isset($statuses[$order->shipment_status])) {
+                    $statusHistory = $statusFlow[$order->shipment_status];
+                    $statusDescriptions = array_map(function ($status, $index) use ($statuses) {
+                        return [
+                            'id' => $index + 1,
+                            'status' => 'Đơn hàng ' . $statuses[$status]
+                        ];
+                    }, $statusHistory, array_keys($statusHistory));
+
+                    return success('Tra cứu hoá đơn thành công', $statusDescriptions);
+                } else {
+                    return errors('Vận chuyển không hợp lệ');
+                }
+            } else {
+                return errors('Không tìm thấy hoá đơn này');
+            }
+        } else {
+            return errors('Vui lòng nhập mã hoá đơn');
+        }
+    }
+
+    public function downloadOrder(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            /**
+             * @example 1 hoặc INV1
+             */
+            'code' => 'nullable|string',
+        ]);
+
+        if ($validator->fails()) {
+            return validationErrors($validator->errors());
+        }
+        if ($request->code != null) {
+            $searchCode = preg_replace('/[^0-9]/', '', $request->code);
+            $order = Order::where('id', $searchCode)
+                ->where('user_id', auth()->guard('api')->user()->id)
+                ->first();
+            if ($order) {
+                $font_family = "'Roboto','sans-serif'";
+                $pdf = Pdf::loadView('order.downloadInvoice', [
+                    'order' => $order,
+                    'font_family' => $font_family,
+                    'direction' => 'ltr',
+                    'default_text_align' => 'left',
+                    'reverse_text_align' => 'right'
+                ]);
+
+                // Trả về dữ liệu PDF dưới dạng phản hồi nhị phân
+                return response($pdf->output(), 200)
+                    ->header('Content-Type', 'application/pdf')
+                    ->header('Content-Disposition', 'attachment; filename="INV' . $order->id . '.pdf"');
+
+            } else {
+                return errors('Không tìm thấy hoá đơn này');
+            }
         }
     }
 }

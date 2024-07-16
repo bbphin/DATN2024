@@ -170,6 +170,8 @@ return [
         'balance' => 'Tiền',
         'is_banned' => 'Khoá tài khoản',
         'role' => 'Quyền',
+        'code' => 'Mã hoá đơn',
+        'quantity' => 'Số lượng',
     ],
 
 ];
